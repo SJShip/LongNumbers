@@ -15,7 +15,7 @@ namespace LongNumbersTests
 		TEST_METHOD(IO_Streams)
 		{
 			std::stringstream sI, sO;
-			std::string strTest = "1234567899876543210";
+			std::string strTest = "1234567899876543210809435609385496093048565436039603450093458690834509634588345769834576";
 
 			sI << strTest;
 			LongNumber longNumber;
@@ -26,9 +26,48 @@ namespace LongNumbersTests
 			Assert::AreEqual(strTest, sO.str());
 		}
 
+		TEST_METHOD(To_String)
+		{
+			// TODO: add support of negative numbers.
+			LongNumber longNumber;
+			std::string strTest = "1234567890";
+
+			std::stringstream ss;
+			ss << strTest;
+			ss >> longNumber;
+
+			Assert::AreEqual(strTest, longNumber.str());
+		}
+
 		TEST_METHOD(From_Int)
 		{
+			// TODO: add support of negative numbers.
 			LongNumber n1 = 1234567890;
+			std::string strTest = "1234567890";
+			Assert::AreEqual(strTest, n1.str());
+		}
+
+		TEST_METHOD(From_LongLong)
+		{
+			// TODO: add support of negative numbers.
+			LongNumber n1 = 123456789123456789;
+			std::string strTest = "123456789123456789";
+			Assert::AreEqual(strTest, n1.str());
+		}
+
+		TEST_METHOD(Assignment)
+		{
+			LongNumber a = 112233445566778899;
+			LongNumber b;
+			b = a;
+			Assert::AreEqual(a.str(), b.str());
+		}
+
+		TEST_METHOD(CopyAssignment)
+		{
+			LongNumber a = 112233445566778899;
+			LongNumber b = a;
+			Assert::AreEqual(a.str(), b.str());
 		}
 	};
 }
