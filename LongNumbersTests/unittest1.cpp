@@ -69,5 +69,35 @@ namespace LongNumbersTests
 			LongNumber b = a;
 			Assert::AreEqual(a.str(), b.str());
 		}
+
+		TEST_METHOD(Sum)
+		{
+			LongNumber a = 112233445566778899;
+			LongNumber b = 994329857324959999;
+			LongNumber s = a + b;
+			std::string testString = "1106563302891738898";
+			Assert::AreEqual(testString, s.str());
+		}
+
+		TEST_METHOD(IncrementOperator)
+		{
+			LongNumber a = 112233445566778899;
+			a+= 994329857324959999;
+			std::string testString = "1106563302891738898";
+			Assert::AreEqual(testString, a.str());
+			a++;
+			testString = "1106563302891738899";
+			Assert::AreEqual(testString, a.str());
+		}
+
+		TEST_METHOD(PostfixIncrement)
+		{
+			LongNumber a = 112233445566778899;
+			std::string sA = a.str();
+
+			LongNumber b = a++;
+
+			Assert::AreEqual(sA, b.str());
+		}
 	};
 }

@@ -28,6 +28,17 @@ ostream& sjship::operator<<(ostream& os, const LongNumber& longNumber)
 	return os;
 }
 
+LongNumber sjship::operator+(const LongNumber & a, const LongNumber & b)
+{
+	return LongNumber::sum(a,b);
+}
+
+bool sjship::operator==(LongNumber & a, LongNumber & b)
+{
+	// we cannot rely on cell values comparison because a and b could have different cell size.
+	return a.str() == b.str();
+}
+
 istream& sjship::operator>>(istream & is, LongNumber & longNumber)
 {
 	char ch;
@@ -68,6 +79,37 @@ void LongNumber::readDigit(const char digit)
 	{
 		m_ptrData->push_back(digit - '0');
 	}
+}
+
+LongNumber sjship::LongNumber::sum(const LongNumber& a, const LongNumber& b)
+{
+	int base = pow(10, a.m_CellSize);
+
+	LongNumber s;
+	auto maxSize = std::max(a.m_ptrData->size(), b.m_ptrData->size());
+	a.m_ptrData->resize(maxSize, 0);
+	b.m_ptrData->resize(maxSize, 0);
+	s.m_ptrData->resize(maxSize, 0);
+
+	for (auto i = 0; i< maxSize; i++)
+	{
+		ull largeSum = static_cast<ull>(a.m_ptrData->at(i)) + b.m_ptrData->at(i) + s.m_ptrData->at(i);
+
+		if (largeSum >= base && i == maxSize - 1)
+		{
+			s.m_ptrData->resize(maxSize + 1, 0);
+		}
+
+		if (largeSum >= base)
+		{
+			// we are sure that we have already resized the vector to appropriate size.
+			s.m_ptrData->at(i + 1) = largeSum / base;
+		}
+
+		s.m_ptrData->at(i) = largeSum % base;
+	}
+
+	return s;
 }
 
 LongNumber::LongNumber(): LongNumber(DEFAULT_CELL_SIZE) {}
@@ -116,6 +158,33 @@ LongNumber& LongNumber::operator=(const LongNumber& longNumber)
 	}
 	return *this;
 }
+
+LongNumber & sjship::LongNumber::operator+=(const LongNumber & longNumber)
+{
+	LongNumber newValue = sum(*this, longNumber);
+
+	*this = newValue;
+
+	return *this;
+}
+
+LongNumber & sjship::LongNumber::operator++()
+{
+	LongNumber newValue = sum(*this, 1);
+
+	*this = newValue;
+
+	return *this;
+}
+
+LongNumber & sjship::LongNumber::operator++(int)
+{
+	LongNumber* value = new LongNumber(*this);
+	*this = sum(*value, 1);
+
+	return *value;
+}
+
 
 std::string sjship::LongNumber::str() const
 {

@@ -6,6 +6,7 @@
 #include <istream>
 #include <sstream>
 #include <cmath>
+#include <algorithm>
 
 namespace sjship
 {
@@ -23,13 +24,18 @@ namespace sjship
 		std::vector<unsigned> *m_ptrData;
 
 		void readDigit(const char digit);
+		static LongNumber sum(const LongNumber& a, const LongNumber&b);
 
 #if defined(LONG_NUMBERS_INSIDE) 
 		friend __declspec(dllexport) std::istream& operator>>(std::istream& is, LongNumber& longNumber);
 		friend __declspec(dllexport) std::ostream& operator<<(std::ostream& os, const LongNumber& longNumber);
+		friend __declspec(dllexport) LongNumber operator+(const LongNumber& a, const LongNumber& b);
+		friend __declspec(dllexport) bool operator==(LongNumber& a, LongNumber& b);
 #else 
 		friend __declspec(dllimport) std::istream& operator>>(std::istream& is, LongNumber& longNumber);
 		friend __declspec(dllimport) std::ostream& operator<<(std::ostream& os, const LongNumber& longNumber);
+		friend __declspec(dllimport) LongNumber operator+(const LongNumber& a, const LongNumber& b);
+		friend __declspec(dllimport) std::istream& operator==(LongNumber& a, LongNumber& b);
 #endif
 
 	public:
@@ -39,6 +45,10 @@ namespace sjship
 		LongNumber(long long value);
 		LongNumber(const LongNumber& longNumber);
 		LongNumber& operator=(const LongNumber& longNumber);
+		LongNumber& operator+=(const LongNumber& longNumber);
+
+		LongNumber& operator++();   // Prefix increment operator.  
+		LongNumber& operator++(int);  // Postfix increment operator.  
 
 		std::string str() const;
 
